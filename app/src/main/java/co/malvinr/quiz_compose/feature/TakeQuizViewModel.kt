@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.malvinr.quiz_compose.data.AnswerEntity
 import co.malvinr.quiz_compose.data.QuizEntity
-import co.malvinr.quiz_compose.data.QuizRepository
+import co.malvinr.quiz_compose.domain.GetRandomQuizUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -19,11 +19,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TakeQuizViewModel @Inject constructor(
-    quizRepository: QuizRepository
+    getRandomQuizzes: GetRandomQuizUseCase
 ) : ViewModel() {
 
     val quizState: StateFlow<TakeQuizUiState> =
-        quizRepository.getQuizResources()
+        getRandomQuizzes()
             .map<List<QuizEntity>, TakeQuizUiState> {
                 TakeQuizUiState.Success(it)
             }
@@ -41,13 +41,6 @@ class TakeQuizViewModel @Inject constructor(
         val quiz = (quizState.value as TakeQuizUiState.Success).quizzes[currentPage]
         quiz.answers.forEach { answer ->
             answer.isSelected = answer == selectedAnswer
-        }
-    }
-
-
-    fun isSelectedAnswerCorrect(selectedAnswer: AnswerEntity) {
-        (quizState.value as TakeQuizUiState.Success).quizzes.forEach {
-            it.isAnswerSelected = true
         }
     }
 }
