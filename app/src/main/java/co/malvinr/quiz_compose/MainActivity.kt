@@ -60,14 +60,12 @@ import androidx.compose.ui.unit.dp
 import androidx.core.text.HtmlCompat
 import androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import co.malvinr.quiz_compose.data.AnswerEntity
 import co.malvinr.quiz_compose.data.QuizEntity
 import co.malvinr.quiz_compose.feature.TakeQuizUiState
 import co.malvinr.quiz_compose.feature.TakeQuizViewModel
 import co.malvinr.quiz_compose.ui.theme.Blueberry
-import co.malvinr.quiz_compose.ui.theme.DeepLilac
 import co.malvinr.quiz_compose.ui.theme.HeavyMetal
 import co.malvinr.quiz_compose.ui.theme.Purple40
 import co.malvinr.quiz_compose.ui.theme.QuizComposeTheme
@@ -104,8 +102,8 @@ fun CobaAmbilData(modifier: Modifier = Modifier, viewModel: TakeQuizViewModel = 
 fun TakeQuizPortrait(
     quizzes: List<QuizEntity>,
     onAnswerClick: (AnswerEntity) -> Unit,
-    currentPage: (Int) -> Unit)
-{
+    currentPage: (Int) -> Unit
+) {
     val quizPagerState = rememberPagerState(pageCount = { quizzes.size })
     val currentQuizPage = quizPagerState.currentPage
     val lastQuizPage = quizPagerState.pageCount - 1
@@ -125,7 +123,7 @@ fun TakeQuizPortrait(
                 },
                 onNextClick = {
                     coroutineScope.launch {
-                            quizPagerState.scrollToPage(currentQuizPage.plus(1))
+                        quizPagerState.scrollToPage(currentQuizPage.plus(1))
                     }
                 },
                 onFinishClick = {
@@ -164,7 +162,10 @@ fun TakeQuizScreen(
         val progressAnimDuration = 300
         val progressAnimation by animateFloatAsState(
             targetValue = currentProgress,
-            animationSpec = tween(durationMillis = progressAnimDuration, easing = FastOutSlowInEasing),
+            animationSpec = tween(
+                durationMillis = progressAnimDuration,
+                easing = FastOutSlowInEasing
+            ),
             label = "Quiz Progress Indicator Progress Animation"
         )
 
@@ -378,7 +379,11 @@ fun AnswerItem(answer: AnswerEntity, onItemClick: () -> Unit, modifier: Modifier
     Surface(
         shape = MaterialTheme.shapes.large,
         border = BorderStroke(width = 1.dp, color = Blueberry),
-        color = if (answer.isSelected) Blueberry else Color.White,
+        color = when {
+            answer.isSelected && answer.isCorrect -> Color.Green
+            answer.isSelected && !answer.isCorrect -> Color.Red
+            else -> Color.White
+        },
         modifier = modifier
             .fillMaxWidth()
             .clickable { onItemClick() }
