@@ -69,6 +69,7 @@ import co.malvinr.quiz_compose.ui.theme.Blueberry
 import co.malvinr.quiz_compose.ui.theme.HeavyMetal
 import co.malvinr.quiz_compose.ui.theme.Purple40
 import co.malvinr.quiz_compose.ui.theme.QuizComposeTheme
+import co.malvinr.quiz_compose.utils.readHtmlText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -393,11 +394,12 @@ fun AnswerItem(answer: AnswerEntity, onItemClick: () -> Unit, modifier: Modifier
             horizontalArrangement = Arrangement.Center
         ) {
             val answerTextColor = if (answer.isSelected) Color.White else Blueberry
+            val answerText = answer.answer
 
             Text(
                 text = buildAnnotatedString {
                     withStyle(style = SpanStyle(color = answerTextColor)) {
-                        append(answer.answer)
+                        append(answerText.readHtmlText())
                     }
                 },
                 style = MaterialTheme.typography.bodyLarge,
