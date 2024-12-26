@@ -398,8 +398,8 @@ fun AnswerItem(
         shape = MaterialTheme.shapes.large,
         border = BorderStroke(width = 1.dp, color = Blueberry),
         color = when {
-            answer.isCorrect -> Color.Green
-            answer.isSelected && !answer.isCorrect -> Color.Red
+            answer.isGreenState -> Color.Green
+            answer.isRedState -> Color.Red
             else -> Color.White
         },
         modifier = modifier

@@ -16,6 +16,10 @@ class AnswerEntity(
     val answer: String,
     val isCorrect: Boolean,
     initialSelected: Boolean = false,
+    initialGreenState: Boolean = false,
+    initialRedState: Boolean = false,
 ) {
     var isSelected by mutableStateOf(initialSelected)
+    var isGreenState by mutableStateOf(initialGreenState)
+    var isRedState by mutableStateOf(initialRedState)
 }

@@ -37,10 +37,17 @@ class TakeQuizViewModel @Inject constructor(
 
     var currentPage by mutableStateOf(-1)
 
+    fun setAnswerSelected() {
+        val quiz = (quizState.value as TakeQuizUiState.Success).quizzes[currentPage]
+        quiz.isAnswerSelected = true
+    }
+
     fun selectAnswer(selectedAnswer: AnswerEntity) {
         val quiz = (quizState.value as TakeQuizUiState.Success).quizzes[currentPage]
         quiz.answers.forEach { answer ->
             answer.isSelected = answer == selectedAnswer
+            answer.isGreenState = answer.isCorrect
+            answer.isRedState = answer.isSelected && !selectedAnswer.isCorrect
         }
     }
 }
