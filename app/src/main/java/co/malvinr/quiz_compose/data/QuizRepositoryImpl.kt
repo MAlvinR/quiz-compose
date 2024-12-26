@@ -15,10 +15,11 @@ internal class QuizRepositoryImpl @Inject constructor(
         val quizResponses = apiNetworkDataSource.getQuizzes().results
 
         val quizEntities = quizResponses.map { quiz ->
-            val answers = listOf(
-                AnswerEntity(quiz.correctAnswer, isCorrect = true)
-            ) + quiz.incorrectAnswers.map { AnswerEntity(it, isCorrect = false) }
-            QuizEntity(quiz.question, answers)
+            val answers = buildList {
+                add(AnswerEntity(quiz.correctAnswer, isCorrect = true))
+                addAll(quiz.incorrectAnswers.map { AnswerEntity(it, isCorrect = false) })
+            }
+            QuizEntity(quiz.question, answers.shuffled())
         }
 
         emit(quizEntities)
