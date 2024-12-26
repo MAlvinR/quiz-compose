@@ -15,7 +15,7 @@ class QuizEntity(
 class AnswerEntity(
     val answer: String,
     val isCorrect: Boolean,
-    initialSelected: Boolean = false
+    initialSelected: Boolean = false,
 ) {
     var isSelected by mutableStateOf(initialSelected)
 }

@@ -9,7 +9,9 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -92,7 +94,10 @@ fun CobaAmbilData(modifier: Modifier = Modifier, viewModel: TakeQuizViewModel = 
     if (quizzes is TakeQuizUiState.Success) {
         TakeQuizPortrait(
             quizzes = (quizzes as TakeQuizUiState.Success).quizzes,
-            onAnswerClick = { selectedAnswer -> viewModel.selectAnswer(selectedAnswer) },
+            onAnswerClick = { selectedAnswer ->
+                viewModel.selectAnswer(selectedAnswer)
+                viewModel.setAnswerSelected()
+            },
             currentPage = { currentPage -> viewModel.currentPage = currentPage }
         )
     }
@@ -350,6 +355,7 @@ fun QuizItem(
             )
             AnswerList(
                 answers = quiz.answers,
+                isAnswerSelected = quiz.isAnswerSelected,
                 onAnswerClick = { selectedAnswer ->
                     onAnswerClick(selectedAnswer)
                 },
@@ -362,32 +368,48 @@ fun QuizItem(
 @Composable
 fun AnswerList(
     answers: List<AnswerEntity>,
+    isAnswerSelected: Boolean,
     onAnswerClick: (AnswerEntity) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = modifier,
+
     ) {
         items(answers) { answer ->
-            AnswerItem(answer = answer, onItemClick = { onAnswerClick(answer) })
+            AnswerItem(
+                answer = answer,
+                isAnswerSelected = isAnswerSelected,
+                onItemClick = { onAnswerClick(answer) }
+            )
         }
     }
 }
 
 @Composable
-fun AnswerItem(answer: AnswerEntity, onItemClick: () -> Unit, modifier: Modifier = Modifier) {
+fun AnswerItem(
+    answer: AnswerEntity,
+    isAnswerSelected: Boolean,
+    onItemClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Surface(
         shape = MaterialTheme.shapes.large,
         border = BorderStroke(width = 1.dp, color = Blueberry),
         color = when {
-            answer.isSelected && answer.isCorrect -> Color.Green
+            answer.isCorrect -> Color.Green
             answer.isSelected && !answer.isCorrect -> Color.Red
             else -> Color.White
         },
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onItemClick() }
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
+            ) {
+                if (!isAnswerSelected) onItemClick()
+            }
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
