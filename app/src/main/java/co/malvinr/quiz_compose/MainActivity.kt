@@ -67,9 +67,11 @@ import co.malvinr.quiz_compose.data.QuizEntity
 import co.malvinr.quiz_compose.feature.TakeQuizUiState
 import co.malvinr.quiz_compose.feature.TakeQuizViewModel
 import co.malvinr.quiz_compose.ui.theme.Blueberry
+import co.malvinr.quiz_compose.ui.theme.DustyRed
 import co.malvinr.quiz_compose.ui.theme.HeavyMetal
 import co.malvinr.quiz_compose.ui.theme.Purple40
 import co.malvinr.quiz_compose.ui.theme.QuizComposeTheme
+import co.malvinr.quiz_compose.ui.theme.SeaGreen
 import co.malvinr.quiz_compose.utils.readHtmlText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -375,7 +377,7 @@ fun AnswerList(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = modifier,
 
-    ) {
+        ) {
         items(answers) { answer ->
             AnswerItem(
                 answer = answer,
@@ -395,10 +397,13 @@ fun AnswerItem(
 ) {
     Surface(
         shape = MaterialTheme.shapes.large,
-        border = BorderStroke(width = 1.dp, color = Blueberry),
+        border = when {
+            answer.isCorrectlyMarked || answer.isIncorrectlyMarked -> null
+            else -> BorderStroke(width = 1.dp, color = Blueberry)
+        },
         color = when {
-            answer.isCorrectlyMarked -> Color.Green
-            answer.isIncorrectlyMarked -> Color.Red
+            answer.isCorrectlyMarked -> SeaGreen
+            answer.isIncorrectlyMarked -> DustyRed
             else -> Color.White
         },
         modifier = modifier
@@ -414,7 +419,10 @@ fun AnswerItem(
             modifier = Modifier.padding(16.dp),
             horizontalArrangement = Arrangement.Center
         ) {
-            val answerTextColor = if (answer.isSelected) Color.White else Blueberry
+            val answerTextColor = when {
+                answer.isCorrectlyMarked || answer.isIncorrectlyMarked -> Color.White
+                else -> Blueberry
+            }
             val answerText = answer.answer
 
             Text(
