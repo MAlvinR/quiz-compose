@@ -9,7 +9,6 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -398,8 +397,8 @@ fun AnswerItem(
         shape = MaterialTheme.shapes.large,
         border = BorderStroke(width = 1.dp, color = Blueberry),
         color = when {
-            answer.isGreenState -> Color.Green
-            answer.isRedState -> Color.Red
+            answer.isCorrectlyMarked -> Color.Green
+            answer.isIncorrectlyMarked -> Color.Red
             else -> Color.White
         },
         modifier = modifier

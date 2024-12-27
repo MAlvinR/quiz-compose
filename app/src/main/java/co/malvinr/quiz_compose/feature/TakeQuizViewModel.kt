@@ -46,8 +46,8 @@ class TakeQuizViewModel @Inject constructor(
         val quiz = (quizState.value as TakeQuizUiState.Success).quizzes[currentPage]
         quiz.answers.forEach { answer ->
             answer.isSelected = answer == selectedAnswer
-            answer.isGreenState = answer.isCorrect
-            answer.isRedState = answer.isSelected && !selectedAnswer.isCorrect
+            answer.isCorrectlyMarked = answer.isCorrect
+            answer.isIncorrectlyMarked = answer.isSelected && !selectedAnswer.isCorrect
         }
     }
 }
