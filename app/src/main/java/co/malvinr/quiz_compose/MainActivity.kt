@@ -96,7 +96,7 @@ fun CobaAmbilData(modifier: Modifier = Modifier, viewModel: TakeQuizViewModel = 
         TakeQuizPortrait(
             quizzes = (quizzes as TakeQuizUiState.Success).quizzes,
             onAnswerClick = { selectedAnswer ->
-                viewModel.selectAnswer(selectedAnswer)
+                viewModel.chooseAnswer(selectedAnswer)
                 viewModel.setAnswerSelected()
             },
             currentPage = { currentPage -> viewModel.currentPage = currentPage }

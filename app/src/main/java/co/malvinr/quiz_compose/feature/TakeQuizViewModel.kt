@@ -42,7 +42,7 @@ class TakeQuizViewModel @Inject constructor(
         quiz.isAnswerSelected = true
     }
 
-    fun selectAnswer(selectedAnswer: AnswerEntity) {
+    fun chooseAnswer(selectedAnswer: AnswerEntity) {
         val quiz = (quizState.value as TakeQuizUiState.Success).quizzes[currentPage]
         quiz.answers.forEach { answer ->
             answer.isSelected = answer == selectedAnswer
