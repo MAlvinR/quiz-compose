@@ -138,7 +138,8 @@ fun TakeQuizPortrait(
                 },
                 showPreviousButton = currentQuizPage > 0,
                 showNextButton = currentQuizPage < lastQuizPage,
-                showFinishButton = currentQuizPage == lastQuizPage
+                showFinishButton = currentQuizPage == lastQuizPage,
+                isAnswerSelected = quizzes[currentQuizPage].isAnswerSelected
             )
         },
         containerColor = Purple40
@@ -238,7 +239,8 @@ fun TakeQuizBottomBar(
     onFinishClick: () -> Unit,
     showPreviousButton: Boolean,
     showNextButton: Boolean,
-    showFinishButton: Boolean
+    showFinishButton: Boolean,
+    isAnswerSelected: Boolean
 ) {
     Row(
         modifier = Modifier.padding(8.dp),
@@ -268,7 +270,11 @@ fun TakeQuizBottomBar(
                 onClick = { onNextClick() },
                 shape = MaterialTheme.shapes.small,
                 contentPadding = PaddingValues(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black,
+                    disabledContainerColor = Color.Gray
+                ),
+                enabled = isAnswerSelected,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
@@ -287,7 +293,11 @@ fun TakeQuizBottomBar(
                 onClick = { onFinishClick() },
                 shape = MaterialTheme.shapes.small,
                 contentPadding = PaddingValues(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black,
+                    disabledContainerColor = Color.Gray
+                ),
+                enabled = isAnswerSelected,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
