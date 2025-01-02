@@ -72,6 +72,7 @@ import co.malvinr.quiz_compose.ui.theme.HeavyMetal
 import co.malvinr.quiz_compose.ui.theme.Purple40
 import co.malvinr.quiz_compose.ui.theme.QuizComposeTheme
 import co.malvinr.quiz_compose.ui.theme.SeaGreen
+import co.malvinr.quiz_compose.ui.theme.WhiteCoffee
 import co.malvinr.quiz_compose.utils.readHtmlText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -142,7 +143,7 @@ fun TakeQuizPortrait(
                 isAnswerSelected = quizzes[currentQuizPage].isAnswerSelected
             )
         },
-        containerColor = Purple40
+        containerColor = WhiteCoffee
     ) { padding ->
         TakeQuizScreen(quizzes, quizPagerState, onAnswerClick, Modifier.padding(padding))
     }
@@ -162,7 +163,7 @@ fun TakeQuizScreen(
     ) {
         Text(
             text = "Ini Ceritanya Buat Progress Bar",
-            color = Color.White,
+            color = Color.Black,
         )
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -179,7 +180,7 @@ fun TakeQuizScreen(
 
         LinearProgressIndicator(
             progress = progressAnimation,
-            color = Color.White,
+            color = Color.Black,
             modifier = Modifier
                 .height(16.dp)
                 .clip(RoundedCornerShape(16.dp))
