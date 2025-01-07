@@ -66,12 +66,8 @@ import co.malvinr.quiz_compose.data.AnswerEntity
 import co.malvinr.quiz_compose.data.QuizEntity
 import co.malvinr.quiz_compose.feature.TakeQuizUiState
 import co.malvinr.quiz_compose.feature.TakeQuizViewModel
-import co.malvinr.quiz_compose.ui.theme.Blueberry
-import co.malvinr.quiz_compose.ui.theme.DustyRed
-import co.malvinr.quiz_compose.ui.theme.HeavyMetal
-import co.malvinr.quiz_compose.ui.theme.Purple40
+import co.malvinr.quiz_compose.ui.theme.AntiqueWhite
 import co.malvinr.quiz_compose.ui.theme.QuizComposeTheme
-import co.malvinr.quiz_compose.ui.theme.SeaGreen
 import co.malvinr.quiz_compose.ui.theme.WhiteCoffee
 import co.malvinr.quiz_compose.utils.readHtmlText
 import dagger.hilt.android.AndroidEntryPoint
@@ -143,7 +139,7 @@ fun TakeQuizPortrait(
                 isAnswerSelected = quizzes[currentQuizPage].isAnswerSelected
             )
         },
-        containerColor = WhiteCoffee
+        containerColor = MaterialTheme.colorScheme.surface
     ) { padding ->
         TakeQuizScreen(quizzes, quizPagerState, onAnswerClick, Modifier.padding(padding))
     }
@@ -314,6 +310,8 @@ fun TakeQuizBottomBar(
     }
 }
 
+//This version (1.5.1) of the Compose Compiler requires Kotlin version 1.9.0 but you appear to be using Kotlin version 1.9.23 which is not known to be compatible.  Please consult the Compose-Kotlin compatibility map located at https://developer.android.com/jetpack/androidx/releases/compose-kotlin to choose a compatible version pair (or `suppressKotlinVersionCompatibilityCheck` but don't say I didn't warn you!).
+
 //@Composable
 //fun BottomNavigationButton(onButtonClick: () -> Unit, modifier: Modifier = Modifier) {
 //    TextButton(
@@ -341,7 +339,7 @@ fun QuizItem(
 ) {
     Surface(
         shape = MaterialTheme.shapes.large,
-        color = Color.White
+        color = AntiqueWhite
     ) {
         Column(
             modifier = Modifier.padding(16.dp)
@@ -350,7 +348,7 @@ fun QuizItem(
                 text = "Question $currentPage of $totalPage",
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.SemiBold,
-                color = HeavyMetal
+                color = MaterialTheme.colorScheme.primary
             )
 
             val spannedQuestionString = HtmlCompat.fromHtml(quiz.question, FROM_HTML_MODE_COMPACT)
@@ -363,7 +361,7 @@ fun QuizItem(
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(top = 12.dp),
-                color = HeavyMetal
+                color = MaterialTheme.colorScheme.primary
             )
             AnswerList(
                 answers = quiz.answers,
@@ -410,12 +408,12 @@ fun AnswerItem(
         shape = MaterialTheme.shapes.large,
         border = when {
             answer.isCorrectlyMarked || answer.isIncorrectlyMarked -> null
-            else -> BorderStroke(width = 1.dp, color = Blueberry)
+            else -> BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.primary)
         },
         color = when {
-            answer.isCorrectlyMarked -> SeaGreen
-            answer.isIncorrectlyMarked -> DustyRed
-            else -> Color.White
+            answer.isCorrectlyMarked -> MaterialTheme.colorScheme.tertiary
+            answer.isIncorrectlyMarked -> MaterialTheme.colorScheme.error
+            else -> MaterialTheme.colorScheme.surface
         },
         modifier = modifier
             .fillMaxWidth()
@@ -432,7 +430,7 @@ fun AnswerItem(
         ) {
             val answerTextColor = when {
                 answer.isCorrectlyMarked || answer.isIncorrectlyMarked -> Color.White
-                else -> Blueberry
+                else -> MaterialTheme.colorScheme.primary
             }
             val answerText = answer.answer
 

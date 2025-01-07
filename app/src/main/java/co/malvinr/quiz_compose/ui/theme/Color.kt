@@ -15,8 +15,17 @@ val HeavyMetal = Color(0xFF2E2E2C)
 val Blueberry = Color(0xFF3937A5)
 
 val WhiteCoffee = Color(0xFFE7E0D7)
+val PhthaloGreen = Color(0xFF173326)
+val Sunray = Color(0xFFDBAA47)
 
 // Faded Red / Dusty Red cb444a
 // Sea Green / Dark Sage 408558
 val DustyRed = Color(0xFFCB444A)
 val SeaGreen = Color(0xFF408558)
+
+val FloralWhite = Color(0xFFFFF9F3) // surface
+val GrayAsparagus = Color(0xFF4C6544) // tertiary
+val Mud = Color(0xFF6D5C3F) // secondary
+val Carnelian = Color(0xFFBA1A1A) // error
+val DarkBronze = Color(0xFF7B5A0D) // primary
+val AntiqueWhite = Color(0xFFF7ECDF) // surface container high
