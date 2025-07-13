@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -60,7 +61,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.text.HtmlCompat
 import androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import co.malvinr.quiz_compose.data.AnswerEntity
 import co.malvinr.quiz_compose.data.QuizEntity
@@ -68,47 +68,42 @@ import co.malvinr.quiz_compose.feature.TakeQuizUiState
 import co.malvinr.quiz_compose.feature.TakeQuizViewModel
 import co.malvinr.quiz_compose.ui.theme.AntiqueWhite
 import co.malvinr.quiz_compose.ui.theme.QuizComposeTheme
-import co.malvinr.quiz_compose.ui.theme.WhiteCoffee
 import co.malvinr.quiz_compose.utils.readHtmlText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private val viewModel: TakeQuizViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val quizUIState by viewModel.quizState.collectAsStateWithLifecycle()
             QuizComposeTheme {
-                // A surface container using the 'background' color from the theme
-                CobaAmbilData()
+                if (quizUIState is TakeQuizUiState.Success) {
+                    TakeQuizScreen(
+                        quizUIState = (quizUIState as TakeQuizUiState.Success).quizzes,
+                        onAnswerClick = { selectedAnswer ->
+                            viewModel.chooseAnswer(selectedAnswer)
+                            viewModel.setAnswerSelected()
+                        },
+                        currentPage = { currentPage -> viewModel.currentPage = currentPage }
+                    )
+                }
             }
         }
     }
 }
 
-@Composable
-fun CobaAmbilData(modifier: Modifier = Modifier, viewModel: TakeQuizViewModel = hiltViewModel()) {
-    val quizzes by viewModel.quizState.collectAsStateWithLifecycle()
-    if (quizzes is TakeQuizUiState.Success) {
-        TakeQuizPortrait(
-            quizzes = (quizzes as TakeQuizUiState.Success).quizzes,
-            onAnswerClick = { selectedAnswer ->
-                viewModel.chooseAnswer(selectedAnswer)
-                viewModel.setAnswerSelected()
-            },
-            currentPage = { currentPage -> viewModel.currentPage = currentPage }
-        )
-    }
-}
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TakeQuizPortrait(
-    quizzes: List<QuizEntity>,
+fun TakeQuizScreen(
+    quizUIState: List<QuizEntity>,
     onAnswerClick: (AnswerEntity) -> Unit,
     currentPage: (Int) -> Unit
 ) {
-    val quizPagerState = rememberPagerState(pageCount = { quizzes.size })
+    val quizPagerState = rememberPagerState(pageCount = { quizUIState.size })
     val currentQuizPage = quizPagerState.currentPage
     val lastQuizPage = quizPagerState.pageCount - 1
     val coroutineScope = rememberCoroutineScope()
@@ -136,18 +131,18 @@ fun TakeQuizPortrait(
                 showPreviousButton = currentQuizPage > 0,
                 showNextButton = currentQuizPage < lastQuizPage,
                 showFinishButton = currentQuizPage == lastQuizPage,
-                isAnswerSelected = quizzes[currentQuizPage].isAnswerSelected
+                isAnswerSelected = quizUIState[currentQuizPage].isAnswerSelected
             )
         },
         containerColor = MaterialTheme.colorScheme.surface
     ) { padding ->
-        TakeQuizScreen(quizzes, quizPagerState, onAnswerClick, Modifier.padding(padding))
+        TakeQuizContent(quizUIState, quizPagerState, onAnswerClick, Modifier.padding(padding))
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TakeQuizScreen(
+fun TakeQuizContent(
     quizzes: List<QuizEntity>,
     quizPagerState: PagerState,
     onAnswerClick: (AnswerEntity) -> Unit,
@@ -310,26 +305,6 @@ fun TakeQuizBottomBar(
     }
 }
 
-//This version (1.5.1) of the Compose Compiler requires Kotlin version 1.9.0 but you appear to be using Kotlin version 1.9.23 which is not known to be compatible.  Please consult the Compose-Kotlin compatibility map located at https://developer.android.com/jetpack/androidx/releases/compose-kotlin to choose a compatible version pair (or `suppressKotlinVersionCompatibilityCheck` but don't say I didn't warn you!).
-
-//@Composable
-//fun BottomNavigationButton(onButtonClick: () -> Unit, modifier: Modifier = Modifier) {
-//    TextButton(
-//        onClick = { onButtonClick() },
-//        shape = MaterialTheme.shapes.small,
-//        contentPadding = PaddingValues(16.dp),
-//        colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
-//        modifier = Modifier.weight(1f).fillMaxWidth()
-//    ) {
-//        Text(
-//            text = "Next",
-//            color = Color.White,
-//            textAlign = TextAlign.Center,
-//            style = MaterialTheme.typography.bodyLarge
-//        )
-//    }
-//}
-
 @Composable
 fun QuizItem(
     quiz: QuizEntity,
@@ -453,10 +428,10 @@ fun TakeQuizScreenPreview() {
     QuizComposeTheme {
         val quizzes = listOf(
             QuizEntity(
-                question = "Siapakah nama lengkap Alvin Ramadhan?",
-                answers = listOf("Muhammad", "Alvin", "Ramadhan", "Ulfa")
+                question = "wawawawawa",
+                answers = listOf("Lorem", "Ipsum")
                     .map { AnswerEntity(it, false) }
             ))
-        TakeQuizPortrait(quizzes, {}, {})
+        TakeQuizScreen(quizzes, {}, {})
     }
 }
